@@ -36,7 +36,7 @@ const BottomPlayer = () => {
   }, [recordings, playingIndex]);
 
   const [audio, state, controls] = useAudio({
-    src: `${process.env.NEXT_PUBLIC_URL}${audioToPlay?.attributes?.audio?.data?.attributes?.url}`,
+    src: `${audioToPlay?.attributes?.audio?.data?.attributes?.url}`,
     autoPlay: false,
   });
 

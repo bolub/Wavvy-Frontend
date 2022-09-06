@@ -70,7 +70,7 @@ const AudioComponent: FC<{
 
   // Audio player
   const [audio, state, controls] = useAudio({
-    src: `${process.env.NEXT_PUBLIC_URL}${currentData?.attributes?.audio?.data?.attributes?.url}`,
+    src: `${currentData?.attributes?.audio?.data?.attributes?.url}`,
     autoPlay: false,
   });
 

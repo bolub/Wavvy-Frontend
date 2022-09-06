@@ -2,13 +2,19 @@ import { Box } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { fetchRecordings } from '../../API/recordings';
 import { List } from '../../components/Data';
-import { folderState } from '../../recoil/folder';
+import {
+  allFolderRecordingsForPlayerState,
+  folderState,
+} from '../../recoil/folder';
 
 const SingleFolder = () => {
   const currentFolderData = useRecoilValue(folderState);
+
+  const [allFolderRecordingsForPlayer, setFolderRecordingsForPlayerState] =
+    useRecoilState(allFolderRecordingsForPlayerState);
 
   const [allRec, setAllRec] = useState([]);
 
@@ -22,6 +28,10 @@ const SingleFolder = () => {
     {
       onSuccess(data) {
         setAllRec(data);
+        setFolderRecordingsForPlayerState({
+          ...allFolderRecordingsForPlayer,
+          recordings: data,
+        });
       },
     }
   );

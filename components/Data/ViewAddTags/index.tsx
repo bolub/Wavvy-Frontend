@@ -28,17 +28,20 @@ interface Props {
 
 export const ViewAddTags: FC<Props> = ({ tags, id, action }) => {
   const initialFocusRef = React.useRef();
+  const queryClient = useQueryClient();
 
   const [hook, setHook] = useState(false);
 
-  const queryClient = useQueryClient();
-
-  const mappedData = tags?.data?.map((tagData: any) => {
-    return JSON.stringify({
-      label: tagData?.id,
-      value: tagData?.attributes?.title,
+  const mappedData = useMemo(() => {
+    const mD = tags?.data?.map((tagData: any) => {
+      return JSON.stringify({
+        label: tagData?.id,
+        value: tagData?.attributes?.title,
+      });
     });
-  });
+
+    return mD;
+  }, [tags]);
 
   const { value, getCheckboxProps, onChange } = useCheckboxGroup({
     defaultValue: mappedData ?? [],
@@ -48,7 +51,7 @@ export const ViewAddTags: FC<Props> = ({ tags, id, action }) => {
 
   const memoTags = useMemo(() => {
     return allTags;
-  }, [tags]);
+  }, [allTags]);
 
   const searchTags = (value: string) => {
     if (!value) {
@@ -73,32 +76,32 @@ export const ViewAddTags: FC<Props> = ({ tags, id, action }) => {
     },
   });
 
-  const addTagToRecording = () => {
-    const dataToSend = value?.map((tagData: any) => {
-      return JSON.parse(tagData)?.label;
-    });
-
-    if (action) {
-      action(dataToSend);
-    } else {
-      mutate({
-        id,
-        data: {
-          tags: dataToSend,
-        },
-      });
-    }
-  };
-
   useEffect(() => {
     if (!hook) return;
+
+    const addTagToRecording = () => {
+      const dataToSend = value?.map((tagData: any) => {
+        return JSON.parse(tagData)?.label;
+      });
+
+      if (action) {
+        action(dataToSend);
+      } else {
+        mutate({
+          id,
+          data: {
+            tags: dataToSend,
+          },
+        });
+      }
+    };
 
     addTagToRecording();
 
     return () => {
       setHook(false);
     };
-  }, [value]);
+  }, [value, hook, action, id, mutate]);
 
   return (
     <Box>

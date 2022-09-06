@@ -6,11 +6,20 @@ import Stage2 from './Stage2';
 
 export const NewRecording: FC<{
   currentFolder: CustomFolderData;
-}> = ({ currentFolder }) => {
+  onClose: () => void;
+  type: 'tag' | 'folder';
+}> = ({ currentFolder, onClose, type = 'folder' }) => {
   const [currentStage, setCurrentStage] = useState('1');
 
   const [blobData, setBlob] = useState();
-  const [duration, setDuration] = useState('');
+  const [duration, setDuration] = useState({
+    text: '',
+    json: {
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+    },
+  });
 
   return (
     <Box px='24px'>
@@ -28,6 +37,8 @@ export const NewRecording: FC<{
           blobData={blobData}
           currentFolder={currentFolder}
           duration={duration}
+          onClose={onClose}
+          type={type}
         />
       )}
     </Box>

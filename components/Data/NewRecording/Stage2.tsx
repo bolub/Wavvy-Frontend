@@ -4,6 +4,7 @@ import {
   Flex,
   FormLabel,
   Icon,
+  SimpleGrid,
   Text,
   useToast,
   VStack,
@@ -11,17 +12,35 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
 import React, { Dispatch, FC, SetStateAction, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { addRecording } from '../../../API/recordings';
-import { CustomFolderData } from '../../../utils/GeneralProps';
+import { allFoldersState } from '../../../recoil/folder';
+import { tagsState } from '../../../recoil/tags';
+import {
+  CustomFolderData,
+  FetchFoldersProps,
+} from '../../../utils/GeneralProps';
 import FormInput from '../../UI/Form/FormInput';
+import SearchableSelect from '../../UI/Form/SearchableSelect';
 import ChevronLeft from '../../UI/Icons/ChevronLeft';
 import { ViewAddTags } from '../ViewAddTags';
+
+interface durationProps {
+  text: string;
+  json: {
+    hours: number;
+    minutes: number;
+    seconds: number;
+  };
+}
 
 interface Props {
   setCurrentStage: Dispatch<SetStateAction<string>>;
   blobData: any;
   currentFolder: CustomFolderData;
-  duration: string;
+  duration: durationProps;
+  onClose: () => void;
+  type: 'tag' | 'folder';
 }
 
 const Stage2: FC<Props> = ({
@@ -29,16 +48,31 @@ const Stage2: FC<Props> = ({
   blobData,
   currentFolder,
   duration,
+  onClose,
+  type,
 }) => {
-  const [tags, setTags] = useState([]);
+  const currentTag = useRecoilValue(tagsState);
+  const allFolders = useRecoilValue(allFoldersState);
 
+  const mappedFolders = allFolders?.map((folderData: FetchFoldersProps) => {
+    return {
+      label: folderData?.attributes?.name,
+      value: folderData?.id,
+    };
+  });
+
+  const [tags, setTags] = useState([currentTag]);
   const [title, setTitle] = useState('');
+  const [folderIdWhenCreatingFromTag, setFolderIdWhenCreatingFromTag] =
+    useState<string>('');
+
   const toast = useToast();
 
   const queryClient = useQueryClient();
   const { mutate, isLoading } = useMutation(addRecording, {
     onSuccess() {
       queryClient.invalidateQueries(['recordings']);
+      onClose();
 
       toast({
         description: 'Added new recording',
@@ -50,9 +84,13 @@ const Stage2: FC<Props> = ({
   const addRecordingHandler = () => {
     const dataToSend = {
       title,
-      custom_folder: currentFolder?.id?.toString(),
+      custom_folder:
+        type === 'tag'
+          ? folderIdWhenCreatingFromTag
+          : currentFolder?.id?.toString(),
       userId: getCookie('USER_ID'),
-      duration,
+      duration: duration?.text,
+      durationJson: JSON.stringify(duration.json),
       tags,
     };
 
@@ -103,25 +141,42 @@ const Stage2: FC<Props> = ({
           }}
         />
 
-        {/* Tags */}
-        <Box>
-          {/* label */}
-          <FormLabel
-            fontWeight={'semibold'}
-            fontSize='sm'
-            color='gray.500'
-            htmlFor='Tags'
-            mb={1}
-            display='flex'
-          >
-            Tags
-          </FormLabel>
+        <SimpleGrid columns={{ base: 1, md: 2 }} w='100%' spacing={8}>
+          {/* folder */}
+          {type === 'tag' && (
+            <SearchableSelect
+              label='Folder'
+              options={mappedFolders}
+              onChange={(selectedItem: { label: string; value: string }) => {
+                setFolderIdWhenCreatingFromTag(selectedItem?.value);
+              }}
+            />
+          )}
 
-          {/* content */}
-          <Box mt='12px'>
-            <ViewAddTags id='' tags={tags} action={setTags} />
+          {/* Tags */}
+          <Box>
+            {/* label */}
+            <FormLabel
+              fontWeight={'semibold'}
+              fontSize='sm'
+              color='gray.500'
+              htmlFor='Tags'
+              mb={1}
+              display='flex'
+            >
+              Tags
+            </FormLabel>
+
+            {/* content */}
+            <Box mt='12px'>
+              <ViewAddTags
+                id=''
+                tags={type === 'tag' ? { data: tags } : {}}
+                action={setTags}
+              />
+            </Box>
           </Box>
-        </Box>
+        </SimpleGrid>
       </VStack>
 
       {/* Finish Button */}
@@ -131,7 +186,13 @@ const Stage2: FC<Props> = ({
           isLoading={isLoading}
           ml='auto'
           size='sm'
-          isDisabled={!title || !blobData}
+          isDisabled={
+            !title ||
+            !blobData ||
+            (type === 'tag'
+              ? !folderIdWhenCreatingFromTag
+              : !currentFolder?.id?.toString())
+          }
         >
           Finish
         </Button>

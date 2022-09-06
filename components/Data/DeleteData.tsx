@@ -21,7 +21,8 @@ const DeleteFolderTag: FC<Props> = ({ contentInfo, contentType, onClose }) => {
   const { mutate, isLoading } = useMutation(deleteFolder, {
     onSuccess() {
       queryClient.invalidateQueries(['allFolders']);
-      queryClient.invalidateQueries(['allRecordings']);
+      queryClient.invalidateQueries(['recordings']);
+      onClose();
 
       toast({
         description: `Deleted ${contentInfo?.name}`,
@@ -35,7 +36,8 @@ const DeleteFolderTag: FC<Props> = ({ contentInfo, contentType, onClose }) => {
     {
       onSuccess() {
         queryClient.invalidateQueries(['allTags']);
-        queryClient.invalidateQueries(['allRecordings']);
+        queryClient.invalidateQueries(['recordings']);
+        onClose();
 
         toast({
           description: `Deleted ${contentInfo?.name}`,
@@ -48,7 +50,8 @@ const DeleteFolderTag: FC<Props> = ({ contentInfo, contentType, onClose }) => {
   const { mutate: deleteRecordingsHandler, isLoading: deleteloading } =
     useMutation(deleteRecording, {
       onSuccess() {
-        queryClient.invalidateQueries(['allRecordings']);
+        queryClient.invalidateQueries(['recordings']);
+        onClose();
 
         toast({
           description: `Deleted ${contentInfo?.name}`,

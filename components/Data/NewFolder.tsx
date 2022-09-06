@@ -1,11 +1,11 @@
 import { Box, Button, Flex, useToast } from '@chakra-ui/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { createFolder } from '../../API/folders';
 import FormInput from '../UI/Form/FormInput';
 
-const NewFolder = () => {
+const NewFolder: FC<{ onClose: () => void }> = ({ onClose }) => {
   const [title, setTitle] = useState('');
 
   const queryClient = useQueryClient();
@@ -14,6 +14,9 @@ const NewFolder = () => {
   const { mutate, isLoading } = useMutation(createFolder, {
     onSuccess() {
       queryClient.invalidateQueries(['allFolders']);
+
+      onClose();
+
       toast({
         description: 'Added new folder',
         status: 'success',

@@ -31,7 +31,7 @@ import CustomLink from '../UI/CustomLink';
 import { DASHBOARD_ROUTES } from '../../utils/routes';
 import { useRouter } from 'next/router';
 import { useSetRecoilState } from 'recoil';
-import { folderState } from '../../recoil/folder';
+import { allFoldersState, folderState } from '../../recoil/folder';
 import ETag from '../UI/Icons/ETag';
 import { fetchAllTags } from '../../API/tags';
 import { allTagsState, tagsState } from '../../recoil/tags';
@@ -49,14 +49,30 @@ const DashLayout: FC<Props> = ({ children }) => {
   const setCurrentFolder = useSetRecoilState(folderState);
   const setCurrentTag = useSetRecoilState(tagsState);
   const setAllTags = useSetRecoilState(allTagsState);
+  const setAllFolders = useSetRecoilState(allFoldersState);
 
-  // @ts-ignore
   const { asPath } = useRouter();
 
-  const { data } = useQuery(['allFolders'], fetchAllFolders, {});
+  const { data } = useQuery(['allFolders'], fetchAllFolders, {
+    onSuccess(data) {
+      setAllFolders(data);
+
+      const currentFolder = data?.find((td: FetchFoldersProps) => {
+        return td?.id.toString() === localStorage.getItem('currentFolderId');
+      });
+
+      setCurrentFolder(currentFolder);
+    },
+  });
   const { data: tagsData } = useQuery(['allTags'], fetchAllTags, {
     onSuccess(data) {
       setAllTags(data);
+
+      const currentTag = data?.find((td: TagsDatum) => {
+        return td?.id.toString() === localStorage.getItem('currentTagId');
+      });
+
+      setCurrentTag(currentTag);
     },
   });
 
@@ -72,7 +88,7 @@ const DashLayout: FC<Props> = ({ children }) => {
 
   return (
     <Container maxW={'7xl'}>
-      <Flex overflowY={'hidden'} mt='60px'>
+      <Flex overflowY={'hidden'} mt='60px' mb='50px'>
         {/* Sidebar */}
         <Box w='295px'>
           <Accordion defaultIndex={[0, 1]} allowMultiple>
@@ -116,7 +132,9 @@ const DashLayout: FC<Props> = ({ children }) => {
                 <VStack align={'start'} spacing='12px' mt={2}>
                   {data?.map((folderData: FetchFoldersProps) => {
                     const isActive = asPath?.includes(
-                      `${DASHBOARD_ROUTES.FOLDER}/${folderData?.attributes?.name}`
+                      `${
+                        DASHBOARD_ROUTES.FOLDER
+                      }/${folderData?.attributes?.name.replace(' ', '%20')}`
                     );
 
                     return (
@@ -125,6 +143,10 @@ const DashLayout: FC<Props> = ({ children }) => {
                           href={`${DASHBOARD_ROUTES.FOLDER}/${folderData?.attributes?.name}?uId=${folderData?.id}`}
                           containerProps={{
                             onClick: () => {
+                              localStorage.setItem(
+                                'currentFolderId',
+                                folderData?.id?.toString()
+                              );
                               setCurrentFolder(folderData);
                             },
                             width: 'full',
@@ -238,6 +260,10 @@ const DashLayout: FC<Props> = ({ children }) => {
                           containerProps={{
                             role: 'group',
                             onClick: () => {
+                              localStorage.setItem(
+                                'currentTagId',
+                                tagsData?.id?.toString()
+                              );
                               setCurrentTag(tagsData);
                             },
                           }}
@@ -334,8 +360,8 @@ const DashLayout: FC<Props> = ({ children }) => {
           <ModalBody p={0}>
             {actionType === 'create' ? (
               <>
-                {contentType === 'folder' && <NewFolder />}
-                {contentType === 'tag' && <NewTag />}
+                {contentType === 'folder' && <NewFolder onClose={onClose} />}
+                {contentType === 'tag' && <NewTag onClose={onClose} />}
               </>
             ) : (
               <DeleteData

@@ -12,7 +12,10 @@ import {
   ModalBody,
   ModalCloseButton,
 } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 import React, { FC } from 'react';
+import { useRecoilValue } from 'recoil';
+import { folderState } from '../../recoil/folder';
 import {
   RecordingsDataProps,
   CustomFolderData,
@@ -29,10 +32,16 @@ interface Props {
 export const List: FC<Props> = ({ title, data }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const currentFolderFromState = useRecoilValue(folderState);
+
   // @ts-ignore
-  const currentFolder: CustomFolderData =
+  const currentFolderFromRecordings: CustomFolderData =
     // @ts-ignore
     data?.length > 0 ? data[0]?.attributes?.custom_folder?.data : {};
+
+  const currentFolder = currentFolderFromState || currentFolderFromRecordings;
+
+  const { pathname } = useRouter();
 
   return (
     <Box>
@@ -59,8 +68,15 @@ export const List: FC<Props> = ({ title, data }) => {
 
       {/*  */}
       <VStack align={'start'} spacing='36px'>
-        {data?.map((recData: RecordingsDataProps) => {
-          return <AudioComponent key={recData.id} data={recData} />;
+        {data?.map((recData: RecordingsDataProps, index: number) => {
+          return (
+            <AudioComponent
+              key={recData.id}
+              data={recData}
+              index={index}
+              allRecs={data}
+            />
+          );
         })}
 
         <Box w='full' borderTopWidth={'1px'} pt='15px' mt='36px'>
@@ -105,7 +121,11 @@ export const List: FC<Props> = ({ title, data }) => {
           </ModalHeader>
 
           <ModalBody p={0}>
-            <NewRecording currentFolder={currentFolder} />
+            <NewRecording
+              type={pathname?.includes('/tag/') ? 'tag' : 'folder'}
+              currentFolder={currentFolder}
+              onClose={onClose}
+            />
           </ModalBody>
         </ModalContent>
       </Modal>

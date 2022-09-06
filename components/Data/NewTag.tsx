@@ -1,11 +1,11 @@
 import { Box, Button, Flex, useToast } from '@chakra-ui/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { createTag } from '../../API/tags';
 import FormInput from '../UI/Form/FormInput';
 
-const NewTag = () => {
+const NewTag: FC<{ onClose: () => void }> = ({ onClose }) => {
   const [title, setTitle] = useState('');
 
   const queryClient = useQueryClient();
@@ -18,6 +18,7 @@ const NewTag = () => {
         description: 'Added new tag',
         status: 'success',
       });
+      onClose();
     },
   });
 

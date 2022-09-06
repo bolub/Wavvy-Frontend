@@ -44,7 +44,7 @@ const Login = () => {
       //    window.location.href = DASHBOARD_ROUTES.ANALYTICS;
       //  }
 
-      // window.location.href = `${DASHBOARD_ROUTES.FOLDER}/uncategorized`;
+      window.location.href = `${DASHBOARD_ROUTES.FOLDER}/Uncategorized?uId=1`;
     },
     onError: (data: any) => {
       const errors = { ...data };

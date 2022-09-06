@@ -17,10 +17,18 @@ import Pause from '../../UI/Icons/Pause';
 import NewRecordingPlayer from './NewRecordingPlayer';
 import { useStopwatch } from 'react-timer-hook';
 
+interface durationProps {
+  text: string;
+  json: {
+    hours: number;
+    minutes: number;
+    seconds: number;
+  };
+}
 interface Props {
   setCurrentStage: Dispatch<SetStateAction<string>>;
   setBlob: any;
-  setDuration: Dispatch<SetStateAction<string>>;
+  setDuration: Dispatch<SetStateAction<durationProps>>;
 }
 
 const Stage1: FC<Props> = ({ setCurrentStage, setBlob, setDuration }) => {
@@ -237,7 +245,14 @@ const Stage1: FC<Props> = ({ setCurrentStage, setBlob, setDuration }) => {
               clearMediaStream();
               setCurrentStage('2');
               setBlob(mediaBlob);
-              setDuration(duration);
+              setDuration({
+                text: duration,
+                json: {
+                  hours,
+                  minutes,
+                  seconds,
+                },
+              });
             }}
           />
         </Tooltip>

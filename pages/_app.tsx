@@ -1,9 +1,13 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-import { ChakraProvider } from '@chakra-ui/react';
+import { Center, ChakraProvider } from '@chakra-ui/react';
 import { theme } from '../chakra/theme';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+  Hydrate,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import Head from 'next/head';
 import Navbar from '../components/Layout/Navbar';
@@ -12,15 +16,19 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { AUTH_ROUTES, DASHBOARD_ROUTES } from '../utils/routes';
 import { RecoilRoot } from 'recoil';
+import BottomPlayer from '../components/Data/BottomPlayer';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        refetchOnWindowFocus: false,
-      },
-    },
-  });
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+          },
+        },
+      })
+  );
 
   const [isAuthRoute, setIsAuthRoute] = useState<boolean>(false);
   const [isDashboardRoute, setIsDashboardRoute] = useState<boolean>(false);
@@ -45,27 +53,45 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
   }, [pathname]);
 
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    setShow(true);
+  }, []);
+
   return (
     <ChakraProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
-        <RecoilRoot>
-          <ReactQueryDevtools initialIsOpen={false} />
-          <Head>
-            <title>Wavy</title>
-          </Head>
+        <Hydrate state={pageProps.dehydratedState}>
+          <RecoilRoot>
+            <ReactQueryDevtools initialIsOpen={false} />
+            <Head>
+              <title>Wavy</title>
+            </Head>
 
-          {isDashboardRoute ? (
-            <>
-              <Navbar />
+            {show ? (
+              <>
+                {isDashboardRoute ? (
+                  <>
+                    <Navbar />
 
-              <DashLayout>
-                <Component {...pageProps} />
-              </DashLayout>
-            </>
-          ) : (
-            <Component {...pageProps} />
-          )}
-        </RecoilRoot>
+                    <DashLayout>
+                      <Component {...pageProps} />
+                    </DashLayout>
+
+                    <BottomPlayer />
+                  </>
+                ) : (
+                  <Component {...pageProps} />
+                )}
+              </>
+            ) : (
+              <Center h='100vh' w='full'>
+                Loading...
+              </Center>
+            )}
+          </RecoilRoot>
+        </Hydrate>
       </QueryClientProvider>
     </ChakraProvider>
   );

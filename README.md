@@ -1,47 +1,15 @@
-# Starter Next.js template with chakra UI
-Got tired of always starting projects from scratch. hopefully this helps.
-
-## Getting Started
-
-[Clone](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) the project and install all dependencies
-```bash
-yarn
-# or
-npm install
-```
-<br/>
-
-Run the development server
-```bash
-npm run dev
-# or
-yarn dev
-```
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the template running.
+# Wavvy
+A platform for audio recordings. It was built with students in mind
 
 
-## Batteries Included
+&nbsp;
 
-### 💎 Next.js and Typescript (Frontend Framework)
- - Documentation - https://nextjs.org/docs
- - Nextjs Typescript docs - https://nextjs.org/docs/basic-features/typescript
-<br/>
+### Current Features
+- Make audio recordings
+- Add tags and notes to recordings
 
-### 🎨 Chakra UI (UI Library)
- - Getting Started - https://chakra-ui.com/guides/getting-started/nextjs-guide
- - Customize Theme - https://chakra-ui.com/docs/styled-system/theming/customize-theme
-<br/>
+&nbsp;
 
-### 🔠 Font Source (Fonts)
- - https://chakra-ui.com/docs/styled-system/recipes/using-fonts
- - Website - https://fontsource.org/docs/guides/nextjs
- - List of Fonts - https://fontsource.org/fonts
-<br/>
-
-### ℹ️ React-Icons (Icons)
- - Documentation - https://react-icons.github.io/react-icons/
-<br/>
-
-### 👽 React Query (API Management)
- - https://react-query.tanstack.com/overview
-<br/>
+### Future features (maybe)
+- Automatic transcript of recordings
+- Sharing recordings with peers/students

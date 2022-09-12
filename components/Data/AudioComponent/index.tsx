@@ -119,7 +119,12 @@ const AudioComponent: FC<{
     <>
       {audio}
       <Flex w='full'>
-        <HStack w='50%' pr={{ base: 0, md: 8 }} spacing='13px'>
+        <HStack
+          mr={{ base: 5, md: 'unset' }}
+          w={{ md: '50%' }}
+          pr={{ base: 0, md: 8 }}
+          spacing='13px'
+        >
           <chakra.button
             w='47px'
             h='47px'
@@ -170,7 +175,12 @@ const AudioComponent: FC<{
         </HStack>
 
         {/* Tags */}
-        <Wrap w='35%' pr={{ base: 0, md: 8 }} spacingX={'10px'}>
+        <Wrap
+          display={{ base: 'none', md: 'flex' }}
+          w='35%'
+          pr={{ base: 0, md: 8 }}
+          spacingX={'10px'}
+        >
           {currentData?.attributes?.tags?.data?.map((tagData) => {
             return (
               <WrapItem key={tagData?.id}>
@@ -188,7 +198,11 @@ const AudioComponent: FC<{
         </Wrap>
 
         {/* More options */}
-        <Flex w='15%' justifyContent={'end'}>
+        <Flex
+          ml={{ base: 'auto', md: 'unset' }}
+          w={{ md: '15%' }}
+          justifyContent={'end'}
+        >
           <Menu>
             <MenuButton
               as={Button}
@@ -289,7 +303,11 @@ const AudioComponent: FC<{
           </ModalHeader>
 
           {/* Content */}
-          <ModalBody p={0}>
+          <ModalBody
+            p={0}
+            maxH={{ base: '600px', md: '700px' }}
+            overflowY={'auto'}
+          >
             {/* Audio details */}
             <Box p='24px' borderBottom={'1px'} borderColor='gray.100'>
               <Flex w='full'>
@@ -358,6 +376,7 @@ const AudioComponent: FC<{
               p='24px'
               borderBottom={'1px'}
               borderColor='gray.100'
+              flexDir={{ base: 'column', md: 'row' }}
             >
               {/* Header */}
               <HStack spacing='5px'>
@@ -368,7 +387,7 @@ const AudioComponent: FC<{
               </HStack>
 
               {/* Content */}
-              <Box ml='60px' mt={1}>
+              <Box ml={{ md: '60px' }} mt={{ base: 4, md: 1 }}>
                 <ViewAddTags
                   tags={currentData?.attributes?.tags}
                   id={currentData?.id}
@@ -377,7 +396,11 @@ const AudioComponent: FC<{
             </Flex>
 
             {/* Notes */}
-            <Flex align={'start'} p='24px'>
+            <Flex
+              align={'start'}
+              p='24px'
+              flexDir={{ base: 'column', md: 'row' }}
+            >
               {/* Header */}
               <HStack spacing='5px'>
                 <Icon as={Book} fontSize='24px' />
@@ -387,7 +410,7 @@ const AudioComponent: FC<{
               </HStack>
 
               {/* Content */}
-              <Box ml='60px' w='full' mt={1}>
+              <Box ml={{ md: '60px' }} w='full' mt={{ base: 4, md: 1 }}>
                 <VStack align={'start'}>
                   {currentData?.attributes?.notes?.data?.map((noteData) => {
                     return (

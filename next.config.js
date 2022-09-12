@@ -15,7 +15,7 @@ module.exports = {
             value: 'true',
           },
         ],
-        destination: '/folder/uncategorized',
+        destination: '/folder/Uncategorized?uId=1',
         permanent: false,
       },
 
@@ -28,12 +28,12 @@ module.exports = {
             value: 'true',
           },
         ],
-        destination: '/folder/uncategorized',
+        destination: '/folder/Uncategorized?uId=1',
         permanent: false,
       },
 
       {
-        source: '/folder/uncategorized',
+        source: '/folder/:id*',
         has: [
           {
             type: 'cookie',
@@ -44,9 +44,8 @@ module.exports = {
         destination: '/login',
         permanent: false,
       },
-
       {
-        source: '/folder/:id*',
+        source: '/tag/:id*',
         has: [
           {
             type: 'cookie',

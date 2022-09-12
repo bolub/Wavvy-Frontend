@@ -35,7 +35,6 @@ const SearchableSelect = ({
     input: (provided: any) => ({
       ...provided,
       height: !isFilter ? '30px' : 'auto',
-      fontWeight: '500',
       width: '100%',
     }),
 
@@ -48,6 +47,7 @@ const SearchableSelect = ({
       outline: 0,
       paddingLeft: '8px',
       width: '100%',
+      fontWeight: '500',
     }),
 
     container: (provided: any) => ({

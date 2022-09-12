@@ -93,22 +93,29 @@ const BottomPlayer = () => {
             {audioToPlay?.attributes?.title}
           </Text>
           <HStack spacing={'38px'} w='fit-content'>
-            <IconButton
-              aria-label='Previous'
-              icon={<RiSkipBackLine />}
-              rounded='full'
-              // size={'lg'}
-              fontSize='xl'
-              colorScheme={'gray'}
-              variant='ghost'
-              isDisabled={playingIndex <= 0 || !audioToPlay}
-              onClick={() => {
-                setAllFolderRecordingsForPlayer({
-                  ...allFolderRecordingsForPlayer,
-                  index: playingIndex - 1,
-                });
-              }}
-            />
+            <Tooltip
+              label={'Previous Recording'}
+              openDelay={500}
+              size='xs'
+              fontSize={'xs'}
+            >
+              <IconButton
+                aria-label='Previous'
+                icon={<RiSkipBackLine />}
+                rounded='full'
+                // size={'lg'}
+                fontSize='xl'
+                colorScheme={'gray'}
+                variant='ghost'
+                isDisabled={playingIndex <= 0 || !audioToPlay}
+                onClick={() => {
+                  setAllFolderRecordingsForPlayer({
+                    ...allFolderRecordingsForPlayer,
+                    index: playingIndex - 1,
+                  });
+                }}
+              />
+            </Tooltip>
 
             <IconButton
               aria-label='Pause'
@@ -127,44 +134,59 @@ const BottomPlayer = () => {
               isDisabled={!audioToPlay}
             />
 
-            <IconButton
-              aria-label='Next'
-              icon={<RiSkipForwardLine />}
-              rounded='full'
-              // size={'lg'}
-              fontSize='xl'
-              colorScheme={'gray'}
-              variant='ghost'
-              isDisabled={
-                playingIndex === recordings?.length - 1 || !audioToPlay
-              }
-              onClick={() => {
-                setAllFolderRecordingsForPlayer({
-                  ...allFolderRecordingsForPlayer,
-                  index: playingIndex + 1,
-                });
-              }}
-            />
+            <Tooltip
+              label={'Next Recording'}
+              openDelay={500}
+              size='xs'
+              fontSize={'xs'}
+            >
+              <IconButton
+                aria-label='Next'
+                icon={<RiSkipForwardLine />}
+                rounded='full'
+                // size={'lg'}
+                fontSize='xl'
+                colorScheme={'gray'}
+                variant='ghost'
+                isDisabled={
+                  playingIndex === recordings?.length - 1 || !audioToPlay
+                }
+                onClick={() => {
+                  setAllFolderRecordingsForPlayer({
+                    ...allFolderRecordingsForPlayer,
+                    index: playingIndex + 1,
+                  });
+                }}
+              />
+            </Tooltip>
           </HStack>
         </Flex>
 
-        <IconButton
-          ml='auto'
-          mt={9}
-          onClick={() => {
-            if (state.muted) {
-              controls.unmute();
-            } else {
-              controls.mute();
-            }
-          }}
-          aria-label='Next'
-          icon={state?.muted ? <RiVolumeDownLine /> : <RiVolumeMuteLine />}
-          rounded='full'
-          fontSize='xl'
-          colorScheme={'gray'}
-          variant='ghost'
-        />
+        {/* Mute / Unmute */}
+        <Tooltip
+          label={state.muted ? 'Unmute' : 'Mute'}
+          openDelay={500}
+          size='xs'
+          fontSize={'xs'}
+        >
+          <IconButton
+            ml='auto'
+            mt={9}
+            onClick={() => {
+              if (state.muted) {
+                controls.unmute();
+              } else {
+                controls.mute();
+              }
+            }}
+            aria-label='Next'
+            icon={state?.muted ? <RiVolumeDownLine /> : <RiVolumeMuteLine />}
+            rounded='full'
+            fontSize='xl'
+            colorScheme={'gray'}
+            variant='ghost'
+          />
+        </Tooltip>
       </Flex>
     </Flex>
   );

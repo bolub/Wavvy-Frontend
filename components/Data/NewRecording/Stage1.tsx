@@ -192,7 +192,7 @@ const Stage1: FC<Props> = ({ setCurrentStage, setBlob, setDuration }) => {
 
       {/* buttons */}
       <HStack spacing={'38px'} mt='34px'>
-        <Tooltip label='Clear Recording'>
+        <Tooltip fontSize={'xs'} label='Clear Recording'>
           <IconButton
             aria-label='Stop'
             icon={<Reload />}
@@ -212,7 +212,7 @@ const Stage1: FC<Props> = ({ setCurrentStage, setBlob, setDuration }) => {
           />
         </Tooltip>
 
-        <Tooltip label='Stop Recording'>
+        <Tooltip fontSize={'xs'} label='Stop Recording'>
           <IconButton
             aria-label='Stop'
             icon={<BsStopFill size='24px' />}
@@ -226,7 +226,7 @@ const Stage1: FC<Props> = ({ setCurrentStage, setBlob, setDuration }) => {
           />
         </Tooltip>
 
-        <Tooltip label='Finish Recording'>
+        <Tooltip fontSize={'xs'} label='Finish Recording'>
           <IconButton
             aria-label='Finish'
             icon={<Checkmark />}

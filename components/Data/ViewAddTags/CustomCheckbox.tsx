@@ -36,7 +36,11 @@ const CustomCheckbox: FC<any> = (props) => {
 
       <Icon as={ETag} active={state.isChecked} fontSize='24px' my='auto' />
 
-      <Tooltip label={JSON.parse(props?.value)?.value} openDelay={800}>
+      <Tooltip
+        label={JSON.parse(props?.value)?.value}
+        openDelay={800}
+        fontSize='xs'
+      >
         <Text
           as='span'
           fontSize={'sm'}

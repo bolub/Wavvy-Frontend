@@ -107,23 +107,30 @@ const DashLayout: FC<Props> = ({ children }) => {
                   </Box>
                   <Icon as={ChevronDown} ml={3} />
 
-                  <IconButton
-                    aria-label='Stop'
-                    // @ts-ignore
-                    icon={<Plus width='20px' height='20px' />}
-                    rounded='full'
-                    size={'sm'}
-                    colorScheme='gray'
-                    variant={'ghost'}
-                    ml='auto'
-                    zIndex={10}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onOpen();
-                      setContentType('folder');
-                      setActionType('create');
-                    }}
-                  />
+                  <Tooltip
+                    label='Create Folder'
+                    openDelay={800}
+                    size='xs'
+                    fontSize={'xs'}
+                  >
+                    <IconButton
+                      aria-label='Create Folder'
+                      // @ts-ignore
+                      icon={<Plus width='20px' height='20px' />}
+                      rounded='full'
+                      size={'sm'}
+                      colorScheme='gray'
+                      variant={'ghost'}
+                      ml='auto'
+                      zIndex={10}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onOpen();
+                        setContentType('folder');
+                        setActionType('create');
+                      }}
+                    />
+                  </Tooltip>
                 </AccordionButton>
               </chakra.h2>
 
@@ -134,7 +141,7 @@ const DashLayout: FC<Props> = ({ children }) => {
                     const isActive = asPath?.includes(
                       `${
                         DASHBOARD_ROUTES.FOLDER
-                      }/${folderData?.attributes?.name.replace(' ', '%20')}`
+                      }/${folderData?.attributes?.name.replaceAll(' ', '%20')}`
                     );
 
                     return (
@@ -225,23 +232,31 @@ const DashLayout: FC<Props> = ({ children }) => {
                     Tags
                   </Box>
                   <Icon as={ChevronDown} ml={3} />
-                  <IconButton
-                    aria-label='Stop'
-                    // @ts-ignore
-                    icon={<Plus width='20px' height='20px' />}
-                    rounded='full'
-                    size={'sm'}
-                    colorScheme='gray'
-                    variant={'ghost'}
-                    ml='auto'
-                    zIndex={10}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onOpen();
-                      setContentType('tag');
-                      setActionType('create');
-                    }}
-                  />
+
+                  <Tooltip
+                    label='Create Tag'
+                    openDelay={800}
+                    size='xs'
+                    fontSize={'xs'}
+                  >
+                    <IconButton
+                      aria-label='Create Tag'
+                      // @ts-ignore
+                      icon={<Plus width='20px' height='20px' />}
+                      rounded='full'
+                      size={'sm'}
+                      colorScheme='gray'
+                      variant={'ghost'}
+                      ml='auto'
+                      zIndex={10}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onOpen();
+                        setContentType('tag');
+                        setActionType('create');
+                      }}
+                    />
+                  </Tooltip>
                 </AccordionButton>
               </chakra.h2>
 
@@ -250,7 +265,10 @@ const DashLayout: FC<Props> = ({ children }) => {
                 <VStack align={'start'} spacing='12px' mt={2}>
                   {tagsData?.map((tagsData: TagsDatum) => {
                     const isActive = asPath?.includes(
-                      `/tag/${tagsData?.attributes?.title.replace(' ', '%20')}`
+                      `/tag/${tagsData?.attributes?.title.replaceAll(
+                        ' ',
+                        '%20'
+                      )}`
                     );
 
                     return (

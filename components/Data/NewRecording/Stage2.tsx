@@ -64,7 +64,7 @@ const Stage2: FC<Props> = ({
   const [tags, setTags] = useState([currentTag]);
   const [title, setTitle] = useState('');
   const [folderIdWhenCreatingFromTag, setFolderIdWhenCreatingFromTag] =
-    useState<string>('');
+    useState<string | number>(currentFolder?.id);
 
   const toast = useToast();
 
@@ -84,10 +84,7 @@ const Stage2: FC<Props> = ({
   const addRecordingHandler = () => {
     const dataToSend = {
       title,
-      custom_folder:
-        type === 'tag'
-          ? folderIdWhenCreatingFromTag
-          : currentFolder?.id?.toString(),
+      custom_folder: folderIdWhenCreatingFromTag,
       userId: getCookie('USER_ID'),
       duration: duration?.text,
       durationJson: JSON.stringify(duration.json),
@@ -143,15 +140,18 @@ const Stage2: FC<Props> = ({
 
         <SimpleGrid columns={{ base: 1, md: 2 }} w='100%' spacing={8}>
           {/* folder */}
-          {type === 'tag' && (
-            <SearchableSelect
-              label='Folder'
-              options={mappedFolders}
-              onChange={(selectedItem: { label: string; value: string }) => {
-                setFolderIdWhenCreatingFromTag(selectedItem?.value);
-              }}
-            />
-          )}
+          {/* {type === 'tag' && ( */}
+          <SearchableSelect
+            label='Folder'
+            options={mappedFolders}
+            onChange={(selectedItem: { label: string; value: string }) => {
+              setFolderIdWhenCreatingFromTag(selectedItem?.value);
+            }}
+            defaultValue={mappedFolders?.filter((fd: any) => {
+              return fd?.value === currentFolder?.id;
+            })}
+          />
+          {/* )} */}
 
           {/* Tags */}
           <Box>

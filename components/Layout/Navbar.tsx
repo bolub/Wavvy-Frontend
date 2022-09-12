@@ -1,4 +1,14 @@
-import { Center, chakra, Container } from '@chakra-ui/react';
+import {
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Button,
+  chakra,
+  Container,
+  Avatar,
+} from '@chakra-ui/react';
+import { logout } from '../../utils/functions';
 
 const Navbar = () => {
   return (
@@ -23,6 +33,30 @@ const Navbar = () => {
             </clipPath>
           </defs>
         </chakra.svg>
+
+        {/* Logout */}
+        <Menu autoSelect={false}>
+          <MenuButton
+            as={Button}
+            variant='unstyled'
+            rounded='full'
+            w='fit-content'
+            size='sm'
+            ml='auto'
+            _focus={{
+              border: '2px solid white',
+              boxShadow: '',
+            }}
+            _active={{
+              border: '2px solid white',
+            }}
+          >
+            <Avatar size={'xs'} />
+          </MenuButton>
+          <MenuList fontSize={'sm'} color='gray.700'>
+            <MenuItem onClick={logout}>Logout</MenuItem>
+          </MenuList>
+        </Menu>
       </Container>
     </chakra.nav>
   );

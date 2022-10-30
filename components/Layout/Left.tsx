@@ -40,6 +40,7 @@ import NewFolder from '../Data/NewFolder';
 import NewTag from '../Data/NewTag';
 import Trash from '../UI/Icons/Trash';
 import DeleteData from '../Data/DeleteData';
+import Empty from '../UI/Empty';
 
 const Left: FC<{ linkOnClick?: () => void }> = ({ linkOnClick }) => {
   const setCurrentFolder = useSetRecoilState(folderState);
@@ -210,6 +211,10 @@ const Left: FC<{ linkOnClick?: () => void }> = ({ linkOnClick }) => {
                   </Flex>
                 );
               })}
+
+              {data?.length === 0 && (
+                <Empty mx='auto' my={5} title='Start adding folders' />
+              )}
             </VStack>
           </AccordionPanel>
         </AccordionItem>
@@ -336,6 +341,10 @@ const Left: FC<{ linkOnClick?: () => void }> = ({ linkOnClick }) => {
                   </Flex>
                 );
               })}
+
+              {tagsData?.length === 0 && (
+                <Empty mx='auto' my={5} title='Start adding tags' />
+              )}
             </VStack>
           </AccordionPanel>
         </AccordionItem>

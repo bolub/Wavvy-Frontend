@@ -11,6 +11,7 @@ import {
   ModalHeader,
   ModalBody,
   ModalCloseButton,
+  Button,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import React, { FC } from 'react';
@@ -20,6 +21,7 @@ import {
   RecordingsDataProps,
   CustomFolderData,
 } from '../../utils/GeneralProps';
+import Empty from '../UI/Empty';
 import SquarePlus from '../UI/Icons/SquarePlus';
 import AudioComponent from './AudioComponent';
 import { NewRecording } from './NewRecording';
@@ -29,7 +31,7 @@ interface Props {
   data?: RecordingsDataProps[];
 }
 
-export const List: FC<Props> = ({ title, data }) => {
+export const List: FC<Props> = ({ title, data = [] }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const currentFolderFromState = useRecoilValue(folderState);
@@ -79,21 +81,31 @@ export const List: FC<Props> = ({ title, data }) => {
           );
         })}
 
-        <Box w='full' borderTopWidth={'1px'} pt='15px' mt='36px'>
-          <chakra.button onClick={onOpen} display='flex'>
-            <Icon as={SquarePlus} my='auto' fontSize={'24px'} />
+        {data?.length === 0 && (
+          <Empty mx='auto' my={32} title='Start recording audios'>
+            <Button px={4} fontSize='sm' mt={5} onClick={onOpen}>
+              Add new
+            </Button>
+          </Empty>
+        )}
 
-            <chakra.span
-              my='auto'
-              ml='6px'
-              fontSize={'xs'}
-              fontWeight='semibold'
-              color='gray.900'
-            >
-              Add New
-            </chakra.span>
-          </chakra.button>
-        </Box>
+        {data?.length > 0 && (
+          <Box w='full' borderTopWidth={'1px'} pt='15px' mt='36px'>
+            <chakra.button onClick={onOpen} display='flex'>
+              <Icon as={SquarePlus} my='auto' fontSize={'24px'} />
+
+              <chakra.span
+                my='auto'
+                ml='6px'
+                fontSize={'xs'}
+                fontWeight='semibold'
+                color='gray.900'
+              >
+                Add New
+              </chakra.span>
+            </chakra.button>
+          </Box>
+        )}
       </VStack>
 
       {/* New recording modal */}

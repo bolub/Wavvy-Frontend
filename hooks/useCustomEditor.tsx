@@ -163,11 +163,11 @@ const useCustomEditor = () => {
       )}
       <Box
         w='full'
-        maxW={'488px'}
         borderColor={'gray.300'}
         borderWidth='2px'
         rounded={'5px'}
         fontWeight='500'
+        bgColor='white'
         // minH='100px'
       >
         <EditorContent editor={editor} />

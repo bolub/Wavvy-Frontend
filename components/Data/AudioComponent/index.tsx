@@ -22,6 +22,13 @@ import {
   ModalCloseButton,
   chakra,
   IconButton,
+  Drawer,
+  DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
 } from '@chakra-ui/react';
 import React, { FC, useMemo, useState } from 'react';
 import { RecordingsDataProps } from '../../../utils/GeneralProps';
@@ -42,10 +49,11 @@ const AudioComponent: FC<{
   data: RecordingsDataProps;
   index: number;
   allRecs: RecordingsDataProps[];
-}> = ({ index, allRecs }) => {
+}> = ({ index, allRecs, data }) => {
   //======================= chakra ===================
   const { isOpen, onOpen, onClose } = useDisclosure();
   const deleteRecordingDisclosure = useDisclosure();
+  const btnRef = React.useRef<any>();
   // =================================================
 
   const [currentIndex, setCurrentIndex] = useState(index);
@@ -99,7 +107,7 @@ const AudioComponent: FC<{
             {state.playing && <Icon as={Pause} fontSize='24px' />}
           </chakra.button>
 
-          <Box onClick={onOpen} cursor='pointer'>
+          <Box ref={btnRef} onClick={onOpen} cursor='pointer'>
             <HStack spacing='7px'>
               <Text
                 fontSize='sm'
@@ -108,16 +116,16 @@ const AudioComponent: FC<{
                 noOfLines={1}
                 maxW='200px'
               >
-                {currentData?.attributes?.title}
+                {data?.attributes?.title}
               </Text>
 
               <Text fontSize='sm' fontWeight={'medium'} color='gray.700'>
-                {currentData?.attributes?.duration}
+                {data?.attributes?.duration}
               </Text>
             </HStack>
 
             <Text mt='7px' fontSize='xs' fontWeight={'medium'} color='gray.700'>
-              {dayjs(currentData?.attributes?.createdAt)?.fromNow()}
+              {dayjs(data?.attributes?.createdAt)?.fromNow()}
             </Text>
           </Box>
         </HStack>
@@ -129,7 +137,7 @@ const AudioComponent: FC<{
           pr={{ base: 0, md: 8 }}
           spacingX={'10px'}
         >
-          {currentData?.attributes?.tags?.data?.map((tagData) => {
+          {data?.attributes?.tags?.data?.map((tagData) => {
             return (
               <WrapItem key={tagData?.id}>
                 <Tag
@@ -187,10 +195,9 @@ const AudioComponent: FC<{
       </Flex>
 
       {/* View data modal */}
-      <Modal isOpen={isOpen} onClose={onClose}>
+      {/* <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent maxW='696px' borderRadius={'16px'}>
-          {/* Header */}
           <ModalHeader
             display='flex'
             borderBottomWidth={'1px'}
@@ -250,7 +257,6 @@ const AudioComponent: FC<{
             </HStack>
           </ModalHeader>
 
-          {/* Content */}
           <ModalBody
             p={0}
             maxH={{ base: '600px', md: '700px' }}
@@ -265,7 +271,93 @@ const AudioComponent: FC<{
             </Button>
           </ModalFooter>
         </ModalContent>
-      </Modal>
+      </Modal> */}
+
+      {/* View data drawer */}
+      <Drawer
+        isOpen={isOpen}
+        placement='right'
+        onClose={onClose}
+        finalFocusRef={btnRef}
+        size='xl'
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerHeader
+            display='flex'
+            borderBottomWidth={'1px'}
+            borderColor='gray.100'
+            py='12px'
+            px='24px'
+            as='div'
+          >
+            <chakra.h2 fontWeight='bold' fontSize={'sm'} my='auto'>
+              {currentData?.attributes?.custom_folder?.data?.attributes?.name}
+            </chakra.h2>
+
+            <HStack ml='auto' my='auto' spacing={'12px'}>
+              <HStack spacing={'5px'}>
+                <IconButton
+                  aria-label='Previous'
+                  icon={<ChevronLeft />}
+                  variant='ghost'
+                  size='sm'
+                  isDisabled={currentIndex <= 0}
+                  onClick={() => {
+                    setCurrentIndex((prev) => prev - 1);
+                  }}
+                />
+                <IconButton
+                  aria-label='Next'
+                  icon={<ChevronRight />}
+                  variant='ghost'
+                  size='sm'
+                  isDisabled={currentIndex === allRecs.length - 1}
+                  onClick={() => {
+                    setCurrentIndex((prev) => prev + 1);
+                  }}
+                />
+              </HStack>
+
+              <Menu>
+                <MenuButton
+                  as={Button}
+                  variant='ghost'
+                  w='fit-content'
+                  size='sm'
+                >
+                  <Icon as={ThreeDots} />
+                </MenuButton>
+                <MenuList fontSize={'sm'} color='gray.700' minW={'200px'}>
+                  <MenuItem
+                    onClick={() => {
+                      onClose();
+                      deleteRecordingDisclosure.onOpen();
+                    }}
+                  >
+                    Delete
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+              <ModalCloseButton pos='static' colorScheme={'blue'} />
+            </HStack>
+          </DrawerHeader>
+
+          <DrawerBody
+            p={0}
+            // maxH={{ base: '600px', md: '700px' }}
+            overflowY={'auto'}
+          >
+            <AudioData currentData={currentData} />
+          </DrawerBody>
+
+          <DrawerFooter>
+            <Button onClick={onClose} variant='ghost' colorScheme={'gray'}>
+              Close
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
 
       {/* Delete Recording */}
       <Modal

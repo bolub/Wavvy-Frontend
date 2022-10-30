@@ -106,20 +106,41 @@ export const ViewAddTags: FC<Props> = ({ tags, id, action }) => {
   return (
     <Box>
       <Wrap spacingX={'10px'}>
-        {value?.map((tagData: any) => {
-          return (
-            <WrapItem key={tagData}>
-              <Tag
-                size='sm'
-                fontWeight={'medium'}
-                colorScheme={'gray'}
-                borderRadius='full'
-              >
-                {JSON.parse(tagData)?.value}
-              </Tag>
-            </WrapItem>
-          );
-        })}
+        {tags?.data?.length > 0 ? (
+          <>
+            {tags?.data?.map((tagData: any) => {
+              return (
+                <WrapItem key={tagData?.id}>
+                  <Tag
+                    size='sm'
+                    fontWeight={'medium'}
+                    colorScheme={'gray'}
+                    borderRadius='full'
+                  >
+                    {tagData?.attributes?.title}
+                  </Tag>
+                </WrapItem>
+              );
+            })}
+          </>
+        ) : (
+          <>
+            {value?.map((tagData: any) => {
+              return (
+                <WrapItem key={tagData?.id}>
+                  <Tag
+                    size='sm'
+                    fontWeight={'medium'}
+                    colorScheme={'gray'}
+                    borderRadius='full'
+                  >
+                    {JSON.parse(tagData)?.value}
+                  </Tag>
+                </WrapItem>
+              );
+            })}
+          </>
+        )}
       </Wrap>
 
       {/* @ts-ignore */}
